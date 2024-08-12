@@ -47,7 +47,7 @@ export default function Chatbot() {
     setIsFetching(true);
 
     try {
-      const res = await fetch('https://data-analysis-toolbot.onrender.com/data-analysis', {
+      const res = await fetch('https://wr0x09iwb6.execute-api.ap-south-1.amazonaws.com/dev/ask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function Chatbot() {
   return (
     <div className='mt-14 mx-auto w-1/2 bg-feature-bg bg-center bg-no-repeat z-20 overflow-hidden border border-gray-400 rounded-md p-5'>
       
-     <h1 className='text-center text-3xl font-medium mx-auto justify-center items-center'>Customer Chatbot AI</h1>
+     <h1 className='text-center text-3xl font-medium mx-auto justify-center items-center'>Your Travel Chatbot AI</h1>
      
     
       <div className='chat_container px-2 my-6'>

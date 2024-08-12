@@ -1,0 +1,12 @@
+boto3
+awscli
+pypdf
+langchain
+streamlit
+faiss-cpu
+groq
+python-dotenv
+langchain_core
+langchain_community
+langchain-huggingface
+huggingface_hub
