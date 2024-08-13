@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={inter.className}>
       <ResponsiveAppBar/>
       <SignedOut>
-          <SignIn routing="path" path="/" appearance={{
+          <SignIn  appearance={{
             elements:{
               rootBox:{ 
                 position:'absolute',
