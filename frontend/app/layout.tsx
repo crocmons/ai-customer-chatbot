@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider, SignedIn, SignedOut, SignIn, SignUp, UserButton } from "@clerk/nextjs";
 import ResponsiveAppBar from '../components/Header'
 import Link from "next/link";
+import Header from "../components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,31 +19,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{
+    
+    <html lang="en">
+      <body className={inter.className}>
+      <ClerkProvider appearance={{
       variables:{
         colorPrimary:"#624cf5"
       }
     }}>
-    <html lang="en">
-      <body className={inter.className}>
-      <ResponsiveAppBar/>
-      <SignedOut>
-          <SignIn routing="path" path="/" appearance={{
-            elements:{
-              rootBox:{ 
-                position:'absolute',
-                top:'50%',
-                left:'50%',
-                transform:'translate(-50%,-50%)'
-                }
-              }
-          }} ></SignIn>
-        </SignedOut>
-        <SignedIn>
+         <Header />
           {children}
-        </SignedIn>
+    </ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }
