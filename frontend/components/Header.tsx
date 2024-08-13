@@ -6,7 +6,7 @@ import React from "react";
 const Header = async () => {
   const { userId } = auth();
   return (
-    <div className="bg-gray-300 gradient font-semibold text-md">
+    <div className="bg-gray-200 gradient font-semibold text-md">
       <div className="container mx-auto flex items-center justify-between py-4">
         <Link href="/">Home</Link>
         <div>
