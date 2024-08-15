@@ -35,8 +35,8 @@ export default function RootLayout({
          <Header />
           {children}
     </ClerkProvider>
-          <GoogleAnalytics gaId="G-GS8VXH6H9X" />
       </body>
+          <GoogleAnalytics gaId="G-GS8VXH6H9X" />
     </html>
   );
 }
