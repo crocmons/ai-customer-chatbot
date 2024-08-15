@@ -6,6 +6,8 @@ import loader from "@/public/assets/icons/loader.svg";
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import botAvatar from "@/public/assets/images/bot.svg"
 import send from "@/public/assets/icons/send.svg"
+import ReactGA from "react-ga4"
+
 
 export default function Chatbot() {
   const [query, setQuery] = useState('');
@@ -22,6 +24,10 @@ export default function Chatbot() {
       setCopied('');
     }, 3000);
   };
+
+  useEffect(()=>{
+    ReactGA.send({ hitType: "pageview", page: "/", title: "ChatPage" });
+  },[])
 
   const chatParent = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -42,6 +48,7 @@ export default function Chatbot() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!query.trim()) return;
+
 
     setMessages((prev) => [...prev, { role: 'user', content: query}]);
     setIsFetching(true);
@@ -66,6 +73,12 @@ export default function Chatbot() {
             content: data.content,
           },
         ]);
+        ReactGA.event({
+          category:"chat",
+          action: data.content,
+          label:data.role
+        })
+        
       } else {
         setMessages((prev) => [...prev, { role: 'bot', content: data.message || data.error || 'An error occurred while fetching data.' }]);
       }
