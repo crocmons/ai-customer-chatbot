@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const MEASUREMENT_ID = "G-GS8VXH6H9X"
 ReactGA.initialize(MEASUREMENT_ID)
-ReactGA.send({ hitType: "pageview", page: "/", title: "ChatPage" });
+ReactGA.send(document.location.pathname);
 
 export default function RootLayout({
   children,
