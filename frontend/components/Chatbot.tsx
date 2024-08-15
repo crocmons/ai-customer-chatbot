@@ -6,7 +6,7 @@ import loader from "@/public/assets/icons/loader.svg";
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import botAvatar from "@/public/assets/images/bot.svg"
 import send from "@/public/assets/icons/send.svg"
-// import ReactGA from "react-ga4"
+import { sendGAEvent } from '@next/third-parties/google';
 
 
 export default function Chatbot() {
@@ -153,7 +153,7 @@ export default function Chatbot() {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e as any)} className='flex w-full mx-auto md:mt-40 bg-feature-bg bg-center bg-no-repeat'>
+        <form onSubmit={()=> sendGAEvent(handleSubmit)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e as any)} className='flex w-full mx-auto md:mt-40 bg-feature-bg bg-center bg-no-repeat'>
                   
           <input
             value={query}
