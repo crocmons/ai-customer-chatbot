@@ -26,7 +26,7 @@ export default function Chatbot() {
   };
 
   useEffect(()=>{
-    ReactGA.send({ hitType: "pageview", page: "https://ai-customer-chatbot-omega.vercel.app/", title: "ChatPage" });
+    ReactGA.send({ hitType: "pageview", page: "/", title: "ChatPage" });
   },[])
 
   const chatParent = useRef<HTMLDivElement>(null);
