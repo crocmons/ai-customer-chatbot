@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const MEASUREMENT_ID = "G-GS8VXH6H9X"
 ReactGA.initialize(MEASUREMENT_ID)
-ReactGA.send(document.location.pathname);
+ReactGA.send({ hitType: "pageview", page: "https://ai-customer-chatbot-omega.vercel.app", title: "ChatPage" });
 
 export default function RootLayout({
   children,
