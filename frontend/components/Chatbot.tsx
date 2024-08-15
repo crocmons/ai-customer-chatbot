@@ -6,7 +6,7 @@ import loader from "@/public/assets/icons/loader.svg";
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import botAvatar from "@/public/assets/images/bot.svg"
 import send from "@/public/assets/icons/send.svg"
-import ReactGA from "react-ga4"
+// import ReactGA from "react-ga4"
 
 
 export default function Chatbot() {
@@ -71,11 +71,7 @@ export default function Chatbot() {
             content: data.content,
           },
         ]);
-        ReactGA.event({
-          category:"chat",
-          action: data.content,
-          label:data.role
-        })
+        
         
       } else {
         setMessages((prev) => [...prev, { role: 'bot', content: data.message || data.error || 'An error occurred while fetching data.' }]);
