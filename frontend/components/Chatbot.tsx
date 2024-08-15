@@ -25,9 +25,7 @@ export default function Chatbot() {
     }, 3000);
   };
 
-  useEffect(()=>{
-    ReactGA.send({ hitType: "pageview", page: "/", title: "ChatPage" });
-  },[])
+  
 
   const chatParent = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
