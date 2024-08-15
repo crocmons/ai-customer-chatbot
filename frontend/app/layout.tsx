@@ -25,18 +25,18 @@ export default function RootLayout({
 }>) {
   return (
     
-    <html lang="en">
-      <body className={inter.className}>
       <ClerkProvider appearance={{
       variables:{
         colorPrimary:"#624cf5"
       }
     }}>
+    <html lang="en">
+      <body className={inter.className}>
          <Header />
           {children}
-    </ClerkProvider>
       </body>
           <GoogleAnalytics gaId="G-GS8VXH6H9X" />
     </html>
+    </ClerkProvider>
   );
 }
