@@ -1,5 +1,4 @@
-'use client';
-
+"use client"
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import loader from "@/public/assets/icons/loader.svg";
@@ -8,24 +7,11 @@ import botAvatar from "@/public/assets/images/bot.svg"
 import send from "@/public/assets/icons/send.svg"
 import { sendGAEvent } from '@next/third-parties/google';
 
-
 export default function Chatbot() {
   const [query, setQuery] = useState('');
-  const [messages, setMessages] = useState<
-    { role: 'user' | 'bot'; content: string; }[]
-  >([]);
+  const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string; }[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [copied, setCopied] = useState('');
-
-  const handleCopy = (content: any) => {
-    setCopied(content);
-    navigator.clipboard.writeText(content);
-    setTimeout(() => {
-      setCopied('');
-    }, 3000);
-  };
-
-  
 
   const chatParent = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -35,7 +21,7 @@ export default function Chatbot() {
     if (domNode) {
       domNode.scrollTop = domNode.scrollHeight;
     }
-  }, [messages]); // Re-run effect whenever messages change
+  }, [messages]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -43,16 +29,25 @@ export default function Chatbot() {
     }
   }, [messages]);
 
+  const handleCopy = (content: string) => {
+    setCopied(content);
+    navigator.clipboard.writeText(content);
+    setTimeout(() => {
+      setCopied('');
+    }, 3000);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!query.trim()) return;
 
-
-    setMessages((prev) => [...prev, { role: 'user', content: query}]);
+    setMessages((prev) => [...prev, { role: 'user', content: query }]);
     setIsFetching(true);
 
+    sendGAEvent(); // Moved this inside handleSubmit
+
     try {
-      const res = await fetch('https://wr0x09iwb6.execute-api.ap-south-1.amazonaws.com/dev/ask', {
+      const res = await fetch('https://wr0x09iwb6.execute-api.ap-south-1.amazonaws.com/dev/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,23 +56,22 @@ export default function Chatbot() {
       });
 
       const data = await res.json();
-      // console.log(data)
       if (data.content) {
         setMessages((prev) => [
           ...prev,
-          {
-            role: 'bot',
-            error:'',
-            content: data.content,
-          },
+          { role: 'bot', content: data.content },
         ]);
-        
-        
       } else {
-        setMessages((prev) => [...prev, { role: 'bot', content: data.message || data.error || 'An error occurred while fetching data.' }]);
+        setMessages((prev) => [
+          ...prev,
+          { role: 'bot', content: data.message || data.error || 'An error occurred while fetching data.' },
+        ]);
       }
     } catch (err) {
-      setMessages((prev) => [...prev, { role: 'bot', content: 'Something Went Wrong...Please try again later.' }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'bot', content: 'Something Went Wrong...Please try again later.' },
+      ]);
     } finally {
       setIsFetching(false);
       setQuery('');
@@ -86,75 +80,61 @@ export default function Chatbot() {
 
   return (
     <div className='mt-14 mx-auto w-1/2 bg-feature-bg bg-center bg-no-repeat z-20 overflow-hidden border border-gray-400 rounded-md p-5'>
-      
-     <h1 className='blue_gradient text-center text-3xl font-medium mx-auto justify-center items-center'>Your Travel Chatbot AI</h1>
-     
-    
+      <h1 className='blue_gradient text-center text-3xl font-medium mx-auto justify-center items-center'>Your Travel Chatbot AI</h1>
       <div className='chat_container px-2 my-6'>
         <div className='sm:chat_box' ref={chatParent}>
-        <div className='glassmorphism md:text-section my-6 gap-6'>
-                    <p>Hi, there , How Can I help you?</p>
-                  </div>
+          <div className='glassmorphism md:text-section my-6 gap-6'>
+            <p>Hi, there , How Can I help you?</p>
+          </div>
           {messages.map((message, index) => (
             <div key={index} className={`sm:my-1 sm:px-2 sm:gap-1 flex flex-col my-8`} ref={index === messages.length - 1 ? lastMessageRef : null}>
               <div className='flex gap-2 py-1'>
-               {message.role === 'bot' && (
-                <>
-                <Image 
-                      src={botAvatar}
-                      alt='avatar'
-                      width={34}
-                      height={34}
-                    />
-              
+                {message.role === 'bot' && (
+                  <>
+                    <Image src={botAvatar} alt='avatar' width={34} height={34} />
                     <span className='flex font-bold text-center items-center'>Assistant</span>
-                    </>
-                  )}
+                  </>
+                )}
               </div>
-              {
-                isFetching && !message.content ? 
-                      <span>......</span>
-                 :
-             (
+              {isFetching && !message.content ? (
+                <span>......</span>
+              ) : (
                 <>
-              {message.role === 'bot' && message.content &&  (
-                <div className=' glassmorphism mb-4 sm:px-4'>
-                  
-                  <div className='md:text-section my-6 gap-6'>
-                    <p>{message.content}</p>
-                  </div>
-                  {message.role === 'bot' && (
-                    <span className='copy_btn' onClick={() => handleCopy(message.content)}>
-                      <Image
-                        src={copied === message.content ? '/assets/icons/tick.svg' : '/assets/icons/copy.svg'}
-                        alt='copy'
-                        width={16}
-                        height={16}
-                      />
-                    </span>
+                  {message.role === 'bot' && message.content && (
+                    <div className='glassmorphism mb-4 sm:px-4'>
+                      <div className='md:text-section my-6 gap-6'>
+                        <p>{message.content}</p>
+                      </div>
+                      <span className='copy_btn' onClick={() => handleCopy(message.content)}>
+                        <Image
+                          src={copied === message.content ? '/assets/icons/tick.svg' : '/assets/icons/copy.svg'}
+                          alt='copy'
+                          width={16}
+                          height={16}
+                        />
+                      </span>
+                    </div>
                   )}
-                </div>
+                </>
               )}
-              </>
-            )}
 
               {message.role === 'user' && (
                 <div className='self-end flex gap-3 shadow-sm'>
-                  <p className='bg-blue-500 text-white font-medium text-md w-full px-5 rounded-2xl py-2 md:py-4 break-words break-all transition-all justify-center md:mx-5 flex-wrap text-wrap flex-shrink'>{message.content}</p>
+                  <p className='bg-blue-500 text-white font-medium text-md w-full px-5 rounded-2xl py-2 md:py-4 break-words break-all transition-all justify-center md:mx-5 flex-wrap text-wrap flex-shrink'>
+                    {message.content}
+                  </p>
                   <SignedIn>
-                      <div className='items-end mx-auto'>
-                        <UserButton afterSignOutUrl='/' />
-                      </div>
-                    </SignedIn>
+                    <div className='items-end mx-auto'>
+                      <UserButton afterSignOutUrl='/' />
+                    </div>
+                  </SignedIn>
                 </div>
               )}
-              
             </div>
           ))}
         </div>
 
-        <form onSubmit={()=> sendGAEvent(handleSubmit)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e as any)} className='flex w-full mx-auto md:mt-40 bg-feature-bg bg-center bg-no-repeat'>
-                  
+        <form onSubmit={handleSubmit} onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e as any)} className='flex w-full mx-auto md:mt-40 bg-feature-bg bg-center bg-no-repeat'>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -168,6 +148,5 @@ export default function Chatbot() {
         </form>
       </div>
     </div>
-
   );
 }
